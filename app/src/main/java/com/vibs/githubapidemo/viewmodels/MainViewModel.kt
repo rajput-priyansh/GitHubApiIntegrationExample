@@ -36,10 +36,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     /**
      * Make GitHub API to search through repositories
      */
-    fun apiGetGitHubRepository(query: String): LiveData<ResponseManager<ResponseSearchRepositories>> {
+    fun apiGetGitHubRepository(query: String, perPage: Int, page: Int): LiveData<ResponseManager<ResponseSearchRepositories>> {
         val liveData = MutableLiveData<ResponseManager<ResponseSearchRepositories>>()
         viewModelScope.launch {
-            liveData.value = repository.getGitHubRepository(query).value
+            liveData.value = repository.getGitHubRepository(query, perPage, page).value
         }
         return liveData
     }

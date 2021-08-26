@@ -21,7 +21,7 @@ class MainRepository(application: Application) {
      * query: Search String
      * return - LiveData object
      */
-    suspend fun getGitHubRepository(query: String)
+    suspend fun getGitHubRepository(query: String, perPage: Int, page: Int)
             : MutableLiveData<ResponseManager<ResponseSearchRepositories>> {
 
         val liveData = MutableLiveData<ResponseManager<ResponseSearchRepositories>>()
@@ -30,7 +30,7 @@ class MainRepository(application: Application) {
 
             val response =
                 withContext(Dispatchers.IO) {
-                    globalApi.getGitHubRepository(query)
+                    globalApi.getGitHubRepository(query, perPage, page)
                 }
 
             withContext(Dispatchers.Main) {

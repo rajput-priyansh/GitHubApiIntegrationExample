@@ -14,10 +14,10 @@ data class ResponseSearchRepositories(
 	val incompleteResults: Boolean? = null,
 
 	@field:SerializedName("items")
-	val items: List<ItemsItem?>? = null
+	val items: ArrayList<RepositoryItem?>? = null
 )
 
-data class ItemsItem(
+data class RepositoryItem(
 
 	@field:SerializedName("stargazers_count")
 	val stargazersCount: Int? = null,
@@ -128,7 +128,7 @@ data class ItemsItem(
 	val openIssuesCount: Int? = null,
 
 	@field:SerializedName("description")
-	val description: Any? = null,
+	val description: String? = null,
 
 	@field:SerializedName("created_at")
 	val createdAt: String? = null,

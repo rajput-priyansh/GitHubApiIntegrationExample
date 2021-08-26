@@ -6,8 +6,10 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Repository(
-    @ColumnInfo(name = "first_name") val firstName: String?,
-    @ColumnInfo(name = "last_name") val lastName: String?
+    @ColumnInfo(name = "name") val name: String?,
+    @ColumnInfo(name = "description") val description: String?,
+    @ColumnInfo(name = "avatar_url") val avatarUrl: String?,
+    @ColumnInfo(name = "project_url") val ProjectUrl: String?
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

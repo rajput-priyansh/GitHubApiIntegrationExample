@@ -23,4 +23,17 @@
         android:layout_below="@id/toolBar"
         app:defaultNavHost="true"
         app:navGraph="@navigation/github_navigation" />
+
+    <RelativeLayout
+        android:id="@+id/rvProgress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolBar"
+        android:background="@color/white">
+
+        <ProgressBar
+            android:layout_width="@dimen/_45sdp"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
 </RelativeLayout>
