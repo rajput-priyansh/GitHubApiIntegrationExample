@@ -43,7 +43,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/lblName"
                 android:textSize="@dimen/_12ssp"
-                android:textColor="@color/black"
                 tools:text="Name"/>
             
             <androidx.constraintlayout.widget.Barrier
@@ -70,7 +69,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/lblDesc"
                 android:textSize="@dimen/_12ssp"
-                android:textColor="@color/black"
                 tools:text="Description"/>
 
             <androidx.constraintlayout.widget.Barrier
@@ -97,7 +95,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/lblProjectLink"
                 android:textSize="@dimen/_12ssp"
-                android:textColor="@color/black"
                 tools:text="@string/lbl_project_link"/>
             
             <androidx.constraintlayout.widget.Barrier

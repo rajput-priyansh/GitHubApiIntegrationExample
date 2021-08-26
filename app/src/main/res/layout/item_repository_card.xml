@@ -45,6 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_4sdp"
             android:textSize="@dimen/_12ssp"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tvName"
             app:layout_constraintTop_toBottomOf="@+id/tvName"
@@ -73,6 +74,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/_12ssp"
             android:layout_marginTop="@dimen/_6sdp"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/ivProfile"
             app:layout_constraintTop_toBottomOf="@+id/sep" />
