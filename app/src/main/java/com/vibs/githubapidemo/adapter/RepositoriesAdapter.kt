@@ -50,7 +50,7 @@ class RepositoriesAdapter(private val listener: RepositoryListener,
 
     override fun getItemViewType(position: Int): Int {
         return if (isLoaderVisible) {
-            if (currentList[position].id ==  -1) VIEW_TYPE_LOADING else VIEW_TYPE_NORMAL
+            if (position == currentList.size - 1) VIEW_TYPE_LOADING else VIEW_TYPE_NORMAL
         } else {
             VIEW_TYPE_NORMAL
         }
@@ -64,13 +64,14 @@ class RepositoriesAdapter(private val listener: RepositoryListener,
         notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun removeLoading() {
         isLoaderVisible = false
         val item = currentList.find { r -> r.id == -1 }
         if (item != null) {
             currentList.remove(item)
         }
-        notifyItemInserted((currentList.size - 1))
+        notifyDataSetChanged()
     }
 
     open class RepositoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {

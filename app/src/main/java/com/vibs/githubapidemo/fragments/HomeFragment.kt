@@ -5,11 +5,13 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.vibs.githubapidemo.AppUtil
 import com.vibs.githubapidemo.GitHubNavigation
 import com.vibs.githubapidemo.R
 import com.vibs.githubapidemo.adapter.RepositoriesAdapter
@@ -81,15 +83,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     adapter.addLoading()
                 } else {
                     adapter.removeLoading()
-                    adapter.notifyDataSetChanged()
                     isLastPage = true
                 }
                 isLoading = false
             }
         })
 
-        viewModel.getGitHubRepositoryFromDb().observe(viewLifecycleOwner, {
+        viewModel.allRepository.observe(viewLifecycleOwner, {
             if (it != null && it.isNotEmpty()) {
+                repositoriesFromDb.clear()
                 for (item in it) {
                     repositoriesFromDb.add(
                         RepositoryItem(
@@ -153,9 +155,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         mCallback.setCurrentPageCount(1)
                         if (newText.isEmpty()) {
                             //Load local database
+                            adapter.removeLoading()
                             repositories.clear()
                             repositories.addAll(repositoriesFromDb)
                             adapter.notifyDataSetChanged()
+
+                            if (requireContext() != null)
+                                AppUtil.hideKeyboard(requireActivity())
+
                         }else {
                             mCallback.onSearchQuery(newText)
                         }

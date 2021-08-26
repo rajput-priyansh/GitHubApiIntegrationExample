@@ -26,8 +26,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val responseRepositories: LiveData<ResponseSearchRepositories> = _responseRepositories
     val selectedRepository: LiveData<RepositoryItem> = _selectedRepository
 
-    init {
-    }
+    var allRepository: LiveData<List<Repository>> = repository.getAllRepositories()
 
     /**
      * Set repositories response
@@ -50,17 +49,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val liveData = MutableLiveData<ResponseManager<ResponseSearchRepositories>>()
         viewModelScope.launch {
             liveData.value = repository.getGitHubRepository(query, perPage, page).value
-        }
-        return liveData
-    }
-
-    /**
-     * get repository list from local DB
-     */
-    fun getGitHubRepositoryFromDb(): LiveData<List<Repository>> {
-        val liveData = MutableLiveData<List<Repository>>()
-        viewModelScope.launch {
-            liveData.value = repository.getGitHubRepositoryFromDb().value
         }
         return liveData
     }

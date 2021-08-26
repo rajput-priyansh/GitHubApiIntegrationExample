@@ -9,12 +9,19 @@ import com.vibs.githubapidemo.database.Repository
 import com.vibs.githubapidemo.models.ResponseSearchRepositories
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import androidx.lifecycle.LiveData
 
 class MainRepository(application: Application) {
 
     private var globalApi = ApiRepository().getGlobalInstance()
 
     private var mainDatabase = MainDatabase.getDatabaseClient(application)
+
+    private var allRepository: LiveData<List<Repository>> = mainDatabase.repositoryDto().getAllRepository()
+
+    fun getAllRepositories(): LiveData<List<Repository>> {
+        return allRepository
+    }
 
     /**
      * Make APi call to get GitHub Repository
@@ -45,26 +52,6 @@ class MainRepository(application: Application) {
             ResponseManager.manageException(liveData, e)
         }
 
-        return liveData
-    }
-
-    /**
-     * get GitHub Repository from Database
-     */
-    suspend fun getGitHubRepositoryFromDb(): MutableLiveData<List<Repository>> {
-        val liveData = MutableLiveData<List<Repository>>()
-        try {
-            val repository =
-                withContext(Dispatchers.IO) {
-                    mainDatabase.repositoryDto().getAllRepository()
-                }
-            withContext(Dispatchers.Main) {
-                liveData.value = repository
-            }
-
-        } catch (e: Exception) {
-            liveData.value = null
-        }
         return liveData
     }
 
