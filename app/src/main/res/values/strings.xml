@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">GitHubApiDemo</string>
     <string name="lbl_avatar_url">avatar url</string>
+    <string name="lbl_name">Name:</string>
+    <string name="lbl_description">Description:</string>
+    <string name="lbl_project_link">Project Link:</string>
 </resources>

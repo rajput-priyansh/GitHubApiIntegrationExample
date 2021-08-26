@@ -50,7 +50,7 @@ class RepositoriesAdapter(private val listener: RepositoryListener,
 
     override fun getItemViewType(position: Int): Int {
         return if (isLoaderVisible) {
-            if (position == currentList.size - 1) VIEW_TYPE_LOADING else VIEW_TYPE_NORMAL
+            if (currentList[position].id ==  -1) VIEW_TYPE_LOADING else VIEW_TYPE_NORMAL
         } else {
             VIEW_TYPE_NORMAL
         }

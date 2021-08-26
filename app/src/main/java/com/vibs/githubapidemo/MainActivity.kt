@@ -111,6 +111,7 @@ class MainActivity : AppCompatActivity(), GitHubNavigation {
      * Make API call to get repository
      */
     private fun getRepository(query: String) {
+        AppUtil.hideKeyboard(this@MainActivity)
         if (currentPageCount == 1) {
             showProgressDialog()
         }
@@ -196,8 +197,6 @@ class MainActivity : AppCompatActivity(), GitHubNavigation {
     }
 
     override fun onSearchQuery(query: String) {
-        Log.e("TESTP", "onSearchQuery() called with: query = $query")
-
         if (query.isEmpty())
             return
 

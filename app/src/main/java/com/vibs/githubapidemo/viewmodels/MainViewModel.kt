@@ -9,6 +9,7 @@ import com.vibs.githubapidemo.models.ResponseSearchRepositories
 import com.vibs.githubapidemo.repository.MainRepository
 import androidx.lifecycle.viewModelScope
 import com.vibs.githubapidemo.database.Repository
+import com.vibs.githubapidemo.models.RepositoryItem
 import kotlinx.coroutines.launch
 
 
@@ -20,8 +21,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
 
     private val _responseRepositories = MutableLiveData<ResponseSearchRepositories>()
+    private val _selectedRepository = MutableLiveData<RepositoryItem>()
 
     val responseRepositories: LiveData<ResponseSearchRepositories> = _responseRepositories
+    val selectedRepository: LiveData<RepositoryItem> = _selectedRepository
 
     init {
     }
@@ -31,6 +34,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      */
     fun setResponseRepositories(data: ResponseSearchRepositories?) {
         _responseRepositories.value = data
+    }
+
+    /**
+     * Set selected repository
+     */
+    fun setSelectedRepository(repository: RepositoryItem) {
+        _selectedRepository.value = repository
     }
 
     /**

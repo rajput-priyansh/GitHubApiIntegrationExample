@@ -116,6 +116,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         adapter = RepositoriesAdapter(object : RepositoriesAdapter.RepositoryListener {
             override fun onRepositoryDetails(repository: RepositoryItem) {
+                viewModel.setSelectedRepository(repository)
                 mCallback.onNavigation(R.id.actionHomeToDetails)
             }
         }, repositories)
@@ -144,17 +145,24 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 return false
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null) {
                     handler.removeCallbacksAndMessages(null);
                     handler.postDelayed({
-                        mCallback.setCurrentPageCount(1);
-                        mCallback.onSearchQuery(newText)
+                        mCallback.setCurrentPageCount(1)
+                        if (newText.isEmpty()) {
+                            //Load local database
+                            repositories.clear()
+                            repositories.addAll(repositoriesFromDb)
+                            adapter.notifyDataSetChanged()
+                        }else {
+                            mCallback.onSearchQuery(newText)
+                        }
                     }, 1500)
                 }
                 return false
             }
-
         })
     }
 
