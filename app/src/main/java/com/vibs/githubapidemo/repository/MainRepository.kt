@@ -53,14 +53,11 @@ class MainRepository(application: Application) {
      */
     suspend fun getGitHubRepositoryFromDb(): MutableLiveData<List<Repository>> {
         val liveData = MutableLiveData<List<Repository>>()
-
         try {
-
             val repository =
                 withContext(Dispatchers.IO) {
                     mainDatabase.repositoryDto().getAllRepository()
                 }
-
             withContext(Dispatchers.Main) {
                 liveData.value = repository
             }
@@ -68,7 +65,6 @@ class MainRepository(application: Application) {
         } catch (e: Exception) {
             liveData.value = null
         }
-
         return liveData
     }
 
@@ -79,6 +75,20 @@ class MainRepository(application: Application) {
         try {
             withContext(Dispatchers.IO) {
                 mainDatabase.repositoryDto().insertAll(repositories)
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+    /**
+     * delete GitHub Repositories to Database
+     */
+    suspend fun deleteGitHubRepositoriesToDb() {
+        try {
+            withContext(Dispatchers.IO) {
+                mainDatabase.repositoryDto().deleteAll()
             }
 
         } catch (e: Exception) {

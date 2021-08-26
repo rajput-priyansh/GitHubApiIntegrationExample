@@ -15,6 +15,7 @@ import com.vibs.githubapidemo.R
 import com.vibs.githubapidemo.adapter.RepositoriesAdapter
 import com.vibs.githubapidemo.databinding.FragmentHomeBinding
 import com.vibs.githubapidemo.listener.PaginationListener
+import com.vibs.githubapidemo.models.Owner
 import com.vibs.githubapidemo.models.RepositoryItem
 import com.vibs.githubapidemo.viewmodels.MainViewModel
 
@@ -29,6 +30,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val viewModel: MainViewModel by activityViewModels()
 
     private val repositories = arrayListOf<RepositoryItem>()
+    private val repositoriesFromDb = arrayListOf<RepositoryItem>()
 
     private var isLastPage = false
     private var isLoading = false
@@ -57,8 +59,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         initUi()
 
         observer()
-
-        //adapter.differ.submitList(it?.kinItem ?: arrayListOf())
     }
 
     private fun initData() {
@@ -85,6 +85,28 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     isLastPage = true
                 }
                 isLoading = false
+            }
+        })
+
+        viewModel.getGitHubRepositoryFromDb().observe(viewLifecycleOwner, {
+            if (it != null && it.isNotEmpty()) {
+                for (item in it) {
+                    repositoriesFromDb.add(
+                        RepositoryItem(
+                            id = item.id,
+                            name = item.name,
+                            description = item.description,
+                            htmlUrl = item.ProjectUrl,
+                            owner = Owner(avatarUrl = item.avatarUrl)
+                        )
+                    )
+                }
+            }
+            //Load the data in case of network call get fail
+            if (repositories.isEmpty() && repositoriesFromDb.isNotEmpty()) {
+                repositories.clear()
+                repositories.addAll(repositoriesFromDb)
+                adapter.notifyDataSetChanged()
             }
         })
     }

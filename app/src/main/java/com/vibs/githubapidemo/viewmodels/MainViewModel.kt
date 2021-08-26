@@ -63,4 +63,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             repository.insertGitHubRepositoriesToDb(repositories)
         }
     }
+    /**
+     * remove repository list from local DB
+     */
+    fun deleteGitHubRepositoriesToDb() {
+        viewModelScope.launch {
+            repository.deleteGitHubRepositoriesToDb()
+        }
+    }
 }

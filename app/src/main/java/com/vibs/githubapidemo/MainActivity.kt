@@ -10,13 +10,14 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.vibs.githubapidemo.api.ResponseManager
+import com.vibs.githubapidemo.database.Repository
 import com.vibs.githubapidemo.databinding.ActivityMainBinding
 import com.vibs.githubapidemo.viewmodels.MainViewModel
 import java.util.HashMap
 
 class MainActivity : AppCompatActivity(), GitHubNavigation {
 
-    companion object{
+    companion object {
         const val PER_PAGE_SIZE = 10
     }
 
@@ -118,6 +119,41 @@ class MainActivity : AppCompatActivity(), GitHubNavigation {
             when (it) {
                 is ResponseManager.Success -> {
                     viewModel.setResponseRepositories(it.data)
+
+                    //insert 15 records to Local DB
+                    if (it.data.items != null && it.data.items.isNotEmpty()) {
+                        val repoDb = arrayListOf<Repository>()
+                        var count = 0
+                        for (item in it.data.items) {
+
+                            if (currentPageCount > 3)
+                                break
+
+                            if (currentPageCount == 2 && count >= 5)
+                                break
+
+                            count += 1
+
+                            repoDb.add(
+                                Repository(
+                                    name = item?.name,
+                                    description = item?.description,
+                                    avatarUrl = item?.owner?.avatarUrl,
+                                    ProjectUrl = item?.htmlUrl
+                                )
+                            )
+                        }
+
+                        //Removed existing recodes from db
+                        if (currentPageCount == 1) {
+                            viewModel.deleteGitHubRepositoriesToDb()
+                        }
+
+                        //insert new recode to db
+                        if (currentPageCount <= 2) {
+                            viewModel.insertGitHubRepositoriesToDb(repoDb)
+                        }
+                    }
 
                     if (!it.data.message.isNullOrEmpty()) {
                         Toast.makeText(this, it.data.message, Toast.LENGTH_SHORT).show()

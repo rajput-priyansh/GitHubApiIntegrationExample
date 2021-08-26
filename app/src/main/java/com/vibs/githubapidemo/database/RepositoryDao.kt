@@ -12,4 +12,7 @@ interface RepositoryDao {
 
     @Insert
     fun insertAll(repositories: List<Repository>)
+
+    @Query("DELETE FROM repository")
+    fun deleteAll()
 }
