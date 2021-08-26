@@ -1,5 +1,6 @@
 package com.vibs.githubapidemo.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -7,16 +8,22 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.AsyncListDiffer
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.vibs.githubapidemo.R
 import com.vibs.githubapidemo.models.RepositoryItem
 
-class RepositoriesAdapter(private val listener: RepositoryListener) :
-    RecyclerView.Adapter<RepositoriesAdapter.RepositoryViewHolder>() {
+class RepositoriesAdapter(private val listener: RepositoryListener,
+                          private val currentList: ArrayList<RepositoryItem>) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    companion object {
+        const val VIEW_TYPE_LOADING = 0
+        const val VIEW_TYPE_NORMAL = 1
+    }
+
+    private var isLoaderVisible = false
 
     private lateinit var context: Context
 
@@ -24,36 +31,47 @@ class RepositoriesAdapter(private val listener: RepositoryListener) :
         fun onRepositoryDetails(repository: RepositoryItem)
     }
 
-    private val diffUtilCallback = object : DiffUtil.ItemCallback<RepositoryItem>() {
-        override fun areItemsTheSame(
-            oldItem: RepositoryItem,
-            newItem: RepositoryItem,
-        ): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(
-            oldItem: RepositoryItem,
-            newItem: RepositoryItem,
-        ): Boolean {
-            return oldItem == newItem
-        }
-
-    }
-
-    val differ = AsyncListDiffer(this, diffUtilCallback)
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepositoryViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         context = parent.context
-        return RepositoryViewHolder.from(parent)
+        return if (viewType == VIEW_TYPE_NORMAL) {
+            RepositoryViewHolder.from(parent)
+        } else {
+            ProgressViewHolder.from(parent)
+        }
     }
 
-    override fun onBindViewHolder(holder: RepositoryViewHolder, position: Int) {
-        holder.bind(differ.currentList[position], this, context)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (getItemViewType(position) == VIEW_TYPE_NORMAL){
+            (holder as RepositoryViewHolder).bind(currentList[position], this, context)
+        }
     }
 
-    override fun getItemCount() = differ.currentList.size
-    
+    override fun getItemCount() = currentList.size
+
+    override fun getItemViewType(position: Int): Int {
+        return if (isLoaderVisible) {
+            if (position == currentList.size - 1) VIEW_TYPE_LOADING else VIEW_TYPE_NORMAL
+        } else {
+            VIEW_TYPE_NORMAL
+        }
+    }
+
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun addLoading() {
+        isLoaderVisible = true
+        currentList.add(RepositoryItem(id = -1))
+        notifyDataSetChanged()
+    }
+
+    fun removeLoading() {
+        isLoaderVisible = false
+        val item = currentList.find { r -> r.id == -1 }
+        if (item != null) {
+            currentList.remove(item)
+        }
+        notifyItemInserted((currentList.size - 1))
+    }
 
     open class RepositoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -90,6 +108,20 @@ class RepositoriesAdapter(private val listener: RepositoryListener) :
                 return RepositoryViewHolder(
                     LayoutInflater.from(parent.context)
                         .inflate(R.layout.item_repository_card,
+                            parent,
+                            false)
+                )
+            }
+        }
+
+    }
+
+    open class ProgressViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        companion object {
+            fun from(parent: ViewGroup): ProgressViewHolder {
+                return ProgressViewHolder(
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.item_progress,
                             parent,
                             false)
                 )

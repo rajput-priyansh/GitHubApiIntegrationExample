@@ -2,6 +2,7 @@ package com.vibs.githubapidemo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
@@ -46,7 +47,7 @@ class MainActivity : AppCompatActivity(), GitHubNavigation {
 
         initUi()
 
-        getRepository("rajput")
+        hideProgressDialog()
     }
 
     private fun initData() {
@@ -150,7 +151,20 @@ class MainActivity : AppCompatActivity(), GitHubNavigation {
         findNavController(R.id.fragmentNavHost).navigate(pageId)
     }
 
-    override fun getCurrentPAgeCount(): Int {
+    override fun getCurrentPageCount(): Int {
         return currentPageCount
+    }
+
+    override fun setCurrentPageCount(page: Int) {
+        currentPageCount = page
+    }
+
+    override fun onSearchQuery(query: String) {
+        Log.e("TESTP", "onSearchQuery() called with: query = $query")
+
+        if (query.isEmpty())
+            return
+
+        getRepository(query)
     }
 }

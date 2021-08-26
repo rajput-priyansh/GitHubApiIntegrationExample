@@ -2,5 +2,7 @@ package com.vibs.githubapidemo
 
 interface GitHubNavigation {
     fun onNavigation(pageId: Int)
-    fun getCurrentPAgeCount(): Int
+    fun getCurrentPageCount(): Int
+    fun setCurrentPageCount(page: Int)
+    fun onSearchQuery(query: String)
 }
